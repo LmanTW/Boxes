@@ -1,5 +1,5 @@
 # 📦 Boxes
-A funny programing language which about 📦.
+A funny programing language which is about 📦.
 
 > [!WARNING]
 > Please don't use 📦 to make any serious project.
