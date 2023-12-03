@@ -15,7 +15,7 @@ Here's an over-engineered example for printing `hi!`:
 * [Structure](#structure)
 * [Create 📦](#create)
 * [Data Types](#data-types)
-* [Functions)(#funcitons)
+* [Functions](#funcitons)
 * [Math](#math)
 
 ## Structure
