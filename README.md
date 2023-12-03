@@ -2,7 +2,7 @@
 A funny programing language which is about 📦.
 
 > [!WARNING]
-> Please don't use 📦 to make any serious project.
+> Please **don't** use 📦 to make any serious project.
 
 ## Example
 Here's a an over-engineered example for printing `hi!`:
