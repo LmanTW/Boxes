@@ -13,12 +13,12 @@ Here's a an over-engineered example for printing `hi!`:
 
 # Contents
 * [Structure](#structure)
-* [Create Boxes](#create-boxes)
+* [Create 📦](#create)
 * [Data Types](#data-types)
 * [Math](#math)
 
 ## Structure
-To do anything in 📦, you **must** store the ~~hardwork~~ aka result into a 📦:
+To do anything in 📦, you **must** store the ~~hard work~~ aka result into a 📦:
 ```
 <Actions> -> <Target>
 <Target> <- <Actions> # You can also do the other way round.
@@ -33,8 +33,8 @@ You can do as many actions as you can ever possibly wish for, as long as you use
 ```
 Btw the result is 6
 
-## Create Boxes
-You can create a box by adding a `+` to the start of the target name:
+## Create 📦
+You can create a 📦 by adding a `+` to the start of the target name:
 ```
 +aBox <- 1
 ```
