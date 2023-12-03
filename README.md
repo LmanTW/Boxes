@@ -7,6 +7,6 @@ A funny programing language which about 📦.
 ## Example
 Here's a example for printing `hi!`
 ```
-['h', 'i', '!'] -> +anArray # Create a new box.
++anArray <- ['h', 'i', '!'] # Create a new box.
 +@main <- anArray(0)+anArray(1) > Result+anArray(2) > print(Result) # Add all the letters together.
 ```
