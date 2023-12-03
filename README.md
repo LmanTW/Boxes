@@ -44,13 +44,15 @@ You can also create a locked box by adding a `@` behind `+`:
 ```
 
 ## Data Types
-Like most of the programing languages, 📦 have: `<string>`, `<number>`, `<boolean>`, `<empty>`, `<array>`, and some other unique data types, like: `actionArray`. 📦 don't have a object, because **why the hell would you ever need a object when you already array**? Just kidding, it's just a joke. [or is it?](https://youtu.be/TN25ghkfgQA?si=4LEfLodD4PVCsSpI&t=2)
+Like most of the programing languages, 📦 have: `<string>`, `<number>`, `<boolean>`, `<empty>`, `<array>`, and some other unique data types, like: `<actionArray>`, `<input>`. 📦 don't have `<object>`, because **why the hell would you ever need a object when you already have array**? Just kidding, it's just a joke. [or is it?](https://youtu.be/TN25ghkfgQA?si=4LEfLodD4PVCsSpI&t=2)
 
 * string: `'aString'` or `"aString"`
 * number: `123` `-123` `123.4`
 * boolean: `Yes` or `No`
 * empty: `Empty`
-* array: `[123, Yes, Empty]`
+* array: `[ 123, Yes, Empty ]`
+* actionArray: `{ 1 > Result+2 > Result+3 }`
+* input: `(123, Yes, Empty)`
   
 ## Math
 People love doing math, 📦 can also do that!
