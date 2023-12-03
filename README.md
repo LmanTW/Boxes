@@ -1,2 +1,7 @@
 # 📦 Boxes
-A dumb programing language which about boxes.
+A funny programing language which about boxes.
+
+## Example
+Here's a example for printing "Hi"
+```
+```
