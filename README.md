@@ -15,6 +15,7 @@ Here's an over-engineered example for printing `hi!`:
 * [Structure](#structure)
 * [Create 📦](#create)
 * [Data Types](#data-types)
+* [Functions)(#funcitons)
 * [Math](#math)
 
 ## Structure
@@ -53,6 +54,18 @@ Like most of the programing languages, 📦 have: `<string>`, `<number>`, `<bool
 * array: `[ 123, Yes, Empty ]`
 * actionArray: `{ 1 > Result+2 > Result+3 }`
 * input: `(123, Yes, Empty)`
-  
+
+## Functions
+People love functions, so to make you love 📦, 📦 also have functions, you can create a `<function>` using `<actionArray>`:
+```
++@aFunction = { 1 > Result+2 > Result+3 } # I'll suggest locking this 📦.
+```
+When you're using a `<actionArray>`, the actions inside of it will not be executed until you call the function. you can call a function by using `<input>`:
+```
++@aFunction = { 1 > Result+2 > Result+3 } # I'll suggest locking this 📦.
+
++@main <- aFunction()
+```
+
 ## Math
 People love doing math, 📦 can also do that!
