@@ -1,6 +1,0 @@
-#Yes -> +@true
-#No -> +@false
-
-[Yes, [0, 1]] -> +data
-
-+@testFunction <- !data(0) a
