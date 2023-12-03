@@ -12,7 +12,7 @@ export default (action, boxes, systemBoxes, start) => {
     while (action[skip] !== undefined && action[skip].type === 'input') {
       let data2 = executeAction(action[skip].value[0], boxes, systemBoxes)
 
-      if (data2.error) return data3
+      if (data2.error) return data2
       if (data2.result.type !== 'number') return { error: true, content: `Cannot Perform "READ" Operation Using <${data2.result.type}>`, line: action[skip].line, start: action[skip].start }
       if (data.type !== 'array') return { error: true, content: `Cannot Read ${data2.result.value} From <${data.type}>`, line: action[skip].line, start: action[skip].start }
 
@@ -21,8 +21,10 @@ export default (action, boxes, systemBoxes, start) => {
       skip++
     }
 
+    if (data === undefined) return { type: 'empty', value: 'Empty' }
+
     return { error: false, data, skip: skip-1 }
-  } else return { error: false, data: data.data, skip: start }
+  } else return { error: false, data, skip: start }
 }
 
 import executeAction from './ExecuteAction.js'

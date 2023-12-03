@@ -47,8 +47,8 @@ export default class {
       result = data.result
     }
 
-    if (this.#boxes[target] === undefined) this.#boxes[target] = { lock, data: result }
-    else this.#boxes[target].data = result
+    if (this.#boxes[target] === undefined) this.#boxes[target] = { lock, data: { type: result.type, value: result.value }}
+    else this.#boxes[target].data = { type: result.type, value: result.value }
 
     return { error: false, result }
   }

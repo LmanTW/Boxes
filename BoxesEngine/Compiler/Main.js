@@ -51,4 +51,4 @@ import splitArray from '../Tools/SplitArray.js'
 import parseFragments from './ParseFragments.js'
 import parseList from './ParseList.js'
 
-const operators = ['+', '-', '!', '<-', '->', '>', '@', ',']
+const operators = ['+', '-', '*', '/', '=', '!', '<-', '->', '>', '@', ',']
