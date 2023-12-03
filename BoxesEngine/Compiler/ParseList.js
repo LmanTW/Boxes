@@ -8,7 +8,7 @@ function parseList (fragments, line) {
   for (let i = 0; i < fragments.length; i++) {
     if (state.type === undefined) {
       if (fragments[i].type === 'bracket' && fragments[i].value === '[') state = { type: 'array', value: [], start: fragments[i].start, layer: fragments[i].layer }
-      else if (fragments[i].type === 'bracket' && fragments[i].value === '{') state = { type: 'actions', value: {}, start: fragments[i].start, layer: fragments[i].layer }
+      else if (fragments[i].type === 'bracket' && fragments[i].value === '{') state = { type: 'actionArray', value: [], start: fragments[i].start, layer: fragments[i].layer }
       else if (fragments[i].type === 'bracket' && fragments[i].value === '(') state = { type: 'input', value: [], start: fragments[i].start, layer: fragments[i].layer }
       else fragments2.push(fragments[i])
     } else {
@@ -32,7 +32,7 @@ function parseList (fragments, line) {
 
           state = {}
         } else state.value.push(fragments[i])
-      } else if (state.type === 'actions') {
+      } else if (state.type === 'actionArray') {
         if (fragments[i].type === 'bracket' && fragments[i].value === '}' && state.layer === fragments[i].layer) {
           for (let i2 = 1; i2 < state.value.length; i2++) {
             if ((state.value[i2] !== undefined && state.value[i2].type === 'operator' && state.value[i2].value === '>' && state.layer+1 === state.value[i2].layer) && (state.value[i2-1] !== undefined && state.value[i2-1].type === 'operator' && state.value[i2-1].value === type && state.layer+1 === state.value[i2-1].layer)) return { error: true, content: `Unexpected "${type}"`, line: state.value[i2].line, start: state.value[i2].start }
@@ -48,7 +48,7 @@ function parseList (fragments, line) {
             items[i2] = data.fragments
           }
 
-          fragments2.push({ type: 'actions', value: items, line, start: state.start})
+          fragments2.push({ type: 'actionArray', value: items, line, start: state.start})
 
           state = {}
           

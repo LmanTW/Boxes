@@ -12,8 +12,8 @@ function executeAction (action, boxes, systemBoxes) {
       if (data.error) return data
 
       result = Object.assign(data.data, { line: action[0].line, start: action[0].start })
-    } else if (action[0].type === 'array') {
-      result = { type: 'array', value: [] }
+    } else if (action[0].type === 'array' || action[0].type === 'input') {
+      result = { type: action[0].type, value: [] }
 
       for (let i = 0; i < action[0].value.length; i++) {
         let data = executeAction(action[0].value[i], boxes, systemBoxes)
@@ -21,7 +21,7 @@ function executeAction (action, boxes, systemBoxes) {
 
         result.value.push({ type: data.result.type, value: data.result.value })
       }
-    } else result = action[0]
+    }  else result = action[0]
   } else if (action[0].type === 'operator' && action[0].value === '!') {
     if (action[1].type === 'boolean') result = { type: 'boolean', value: (action[1].value === 'Yes') ? 'No' : 'Yes' }
     else if (action[1].type === 'name') {
@@ -90,7 +90,7 @@ function executeAction (action, boxes, systemBoxes) {
     if (action[data.skip+1] !== undefined) return { error: true, content: `Unexpected <${action[data.skip+1].type}>`, line: action[data.skip+1].line, start: action[data.skip+1].start }
 
     result = data.data
-  }
+  } else return { error: true, content: `Unexpected <${action[1].type}>`, line: action[1].line, start: action[1].start }
 
   return { error: false, result }
 }

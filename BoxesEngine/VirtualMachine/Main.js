@@ -2,9 +2,11 @@
 export default class {
   #state = 'idle'
   #boxes
+
+  #environment = {}
   
-  constructor () {
-    
+  constructor (environment) {
+    Object.keys(environment).forEach((item) => this.#environment[item] = convertJSType(environment[item]))
   }
 
   get state () {return this.#state}
@@ -40,7 +42,7 @@ export default class {
 
     let result = { type: 'empty', value: 'Empty' }
     for (let action of splitArray(operation.source, (item) => item.type === 'operator' && item.value === '>')) {
-      data = executeAction(action, this.#boxes, { Result: result })
+      data = executeAction(action, this.#boxes, Object.assign(this.#environment, { Result: result }))
 
       if (data.error) return data
 
@@ -54,6 +56,7 @@ export default class {
   }
 }
 
+import convertJSType from '../Tools/ConvertJSType.js'
 import splitArray from '../Tools/SplitArray.js'
 
 import executeAction from './ExecuteAction.js'
