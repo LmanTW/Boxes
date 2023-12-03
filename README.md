@@ -12,8 +12,9 @@ Here's a an over-engineered example for printing `hi!`:
 ```
 
 # Contents
-* [Structure](structure)
-* [Create Boxes](create-boxes)
+* [Structure](#structure)
+* [Create Boxes](#create-boxes)
+* [Data Types](#data-types)
 
 ## Structure
 To do anything in 📦, you **must** store the ~~hardwork~~ aka result into a 📦:
@@ -39,3 +40,6 @@ You can also create a locked box by adding `@` behind `+`:
 ```
 +@aLockedBox <- 1
 ```
+
+## Data Types
+Like most of the programing languages, 📦 have `string`, `number`, `boolean`, `empty`, `array`, 📦 don't have a object, because **why the hell would you ever need a object when you already array**? Just kidding, it's just a joke. [or is it?](https://youtu.be/TN25ghkfgQA?si=4LEfLodD4PVCsSpI&t=2)
