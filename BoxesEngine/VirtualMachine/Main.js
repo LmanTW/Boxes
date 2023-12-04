@@ -32,7 +32,7 @@ export default class {
 
   //Execute
   #execute (operation) {
-    let data = getTarget(operation, this.#boxes)
+    let data = getTarget(operation, this.#boxes, this.#environment)
 
     if (data.error) return data
 

@@ -32,13 +32,14 @@ function executeAction (action, boxes, systemBoxes) {
 
       result = { type: 'boolean', value: (data.data.value === 'Yes') ? 'No' : 'Yes' }
     } else return { error: true, content: `Cannot Perform "NOT" Operation On <${action[1].type}>`, line: action[1].line, start: action[1].start }
-  } else if (arrayIncludeAmount(action, (item) => item.type === 'operator' && item.value === '+') > 0 || arrayIncludeAmount(action, (item) => item.type === 'operator' && item.value === '-') > 0 || arrayIncludeAmount(action, (item) => item.type === 'operator' && item.value === '*') > 0 || arrayIncludeAmount(action, (item) => item.type === 'operator' && item.value === '/') > 0) {
+  } else if (arrayIncludeAmount(action, (item) => item.type === 'operator' && ['+', '-', '*', '/', '='].includes(item.value)) > 0) {
     let type
     
     if (arrayIncludeAmount(action, (item) => item.type === 'operator' && item.value === '+') > 0) type = '+'
     else if (arrayIncludeAmount(action, (item) => item.type === 'operator' && item.value === '-') > 0) type = '-'
     else if (arrayIncludeAmount(action, (item) => item.type === 'operator' && item.value === '*') > 0) type = '*'
     else if (arrayIncludeAmount(action, (item) => item.type === 'operator' && item.value === '/') > 0) type = '/'
+    else if (arrayIncludeAmount(action, (item) => item.type === 'operator' && item.value === '=') > 0) type = '='
 
     let chunks = splitArray(action, (item) => item.type === 'operator' && item.value === type)
 
@@ -82,6 +83,10 @@ function executeAction (action, boxes, systemBoxes) {
       if (chunks[1].type !== 'number') return { error: true, content: `Cannot Perform "Divide" Operation On <${chunks[1].type}>` }  
 
       result = { type: 'number', value: `${(+chunks[0].value)/(+chunks[1].value)}` }
+    } else if (type === '=') {
+      if (chunks[0].type === 'array' && chunks[1].type === 'array') result = { type: 'boolean', value: equalArray(chunks[0].value, chunks[1].value) ? 'Yes' : 'No' }
+      else if (chunks[0].type === 'actionArray' &&  chunks[1].type === 'actionArray') result = { type: 'boolean', value: equalArray(chunks[0].value, chunks[1].value) ? 'Yes' : 'No' }
+      else result = { type: 'boolean', value: (chunks[0].type === chunks[1].type && chunks[0].value === chunks[1].value) ? 'Yes' : 'No' }
     }
   } else if (action[0].type === 'name') {
     let data = getBox(action, boxes, systemBoxes, 0)
@@ -97,5 +102,6 @@ function executeAction (action, boxes, systemBoxes) {
 
 import arrayIncludeAmount from '../Tools/ArrayIncludeAmount.js'
 import splitArray from '../Tools/SplitArray.js'
+import equalArray from '../Tools/EqualArray.js'
 
 import getBox from './GetBox.js'
