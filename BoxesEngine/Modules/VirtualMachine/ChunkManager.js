@@ -47,7 +47,7 @@ export default class {
     }
 
     if (async) {
-      if (parentChunk !== undefined) parentChunk.returnedResult = { type: 'promise', value: { type: 'actionList', value: actions }}
+      if (parentChunk !== undefined) parentChunk.returnedResult = { type: 'promise', value: '' }
     } else {
       if (parentChunk !== undefined) parentChunk.state = 'waiting'
     }

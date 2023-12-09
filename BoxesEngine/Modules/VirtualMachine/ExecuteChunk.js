@@ -118,7 +118,7 @@ export default (ChunkManager, chunk, boxes, environment) => {
     let data
     if (fragment.value === 'Result') data = { type: chunk.result.type, value: chunk.result.value, line: fragment.line, start: fragment.start, end: fragment.end, name: fragment.value, path: [] }
     else if (fragment.value === 'Input') data = { type: chunk.input.type, value: chunk.input.value, line: fragment.line, start: fragment.start, end: fragment.end, name: fragment.value, path: [] }
-    else data = (boxes[fragment.value] === undefined) ? environment[fragment.value].data : boxes[fragment.value].data
+    else data = (boxes[fragment.value] === undefined) ? environment[fragment.value] : boxes[fragment.value].data
 
     chunk.result = { type: data.type, value: data.value, line: data.line, start: data.start, end: data.end, name: fragment.value, path: [] }
   } else if (fragment.type === 'list' || fragment.type === 'inputList') {
@@ -174,6 +174,12 @@ export default (ChunkManager, chunk, boxes, environment) => {
             ChunkManager.addChunk(chunk, { line: fragment.line }, { input: { type: 'list', value: chunk.executeData.returnedResults }}, chunk.result.value, chunk.properties.includes('async'))
 
             return { error: false }
+          } else if (chunk.result.type === 'externalFunction') {
+            chunk.executeData.state = 'waitingExternalFunction'
+
+            callJsFunction(chunk, chunk.result.value, chunk.executeData.returnedResults, chunk.properties.includes('async'))
+
+            return { error: false }
           }
         }
 
@@ -183,8 +189,11 @@ export default (ChunkManager, chunk, boxes, environment) => {
         
         return { error: false }
       }
-    } else if (chunk.executeData.state === 'waitingActions') {
-      chunk.result = chunk.returnedResult
+    } else if (chunk.executeData.state === 'waitingActions') chunk.result = chunk.returnedResult
+    else if (chunk.executeData.state === 'waitingExternalFunction') {
+      if (chunk.returnedResult.error) return { error: true, content: chunk.returnedResult.content, line: fragment.line, start: fragment.start }
+
+      chunk.result = { type: chunk.returnedResult.data.type, value: chunk.returnedResult.data.value, line: fragment.line, start: fragment.start }
     }
   } else return { error: true, content: `Unexpected <${fragment.type}>`, line: fragment.line, start: fragment.start }
 
@@ -211,5 +220,6 @@ export default (ChunkManager, chunk, boxes, environment) => {
 
 import splitArray from '../Tools/SplitArray.js'
 
+import callJsFunction from './CallJsFunction.js'
 import isListEqual from './EqualList.js'
 import setTarget from './SetTarget.js'

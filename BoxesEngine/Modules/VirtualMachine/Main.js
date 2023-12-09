@@ -46,7 +46,11 @@ export default class {
 
             if (chunk.state === 'running') {
               let data = executeChunk(this.#ChunkManager, chunk, this.#boxes, this.#environment)
-              if (data.error) return resolve(data)
+              if (data.error) {
+                 clearInterval(interval)
+
+                 return resolve(data)
+              }
 
               result = chunk.result
             }
@@ -81,7 +85,7 @@ export default class {
   }
 }
 
-import convertJsData from '../Tools/ConvertJSData.js'
+import convertJsData from '../Tools/ConvertJsData.js'
 import mergeObject from '../Tools/MergeObject.js'
 
 import ChunkManager from './ChunkManager.js'

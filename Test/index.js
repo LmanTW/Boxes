@@ -9,7 +9,9 @@ import { Compiler, VirtualMachine } from '../BoxesEngine/API.js'
 
   if (data.error) console.log(`Compiler Error: ${data}`)
   else {
-    let vm = new VirtualMachine()
+    let vm = new VirtualMachine({
+      print: (...args) => console.log(...args)
+    })
 
     console.log(await vm.start(data.operations))
   }
