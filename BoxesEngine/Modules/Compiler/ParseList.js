@@ -17,7 +17,7 @@ function parseList (fragments, line) {
       }
     } else {
       if (fragments[i].type === 'bracket' && fragments[i].value === state.bracket && fragments[i].layer === state.layer) {
-        let symbol = (state.type === 'list' || state.type === 'inputList') ? ',' : '>'
+        let symbol = (state.type === 'list' || state.type === 'inputList') ? ',' : '|'
 
         for (let i2 = 1; i2 < state.value.length; i2++) {
           if ((state.value[i2].type === 'operator' && state.value[i2].value === symbol && state.value[i2].layer === state.layer+1) && (state.value[i2-1].type !== undefined && state.value[i2-1].type === 'operator' && state.value[i2-1].value === symbol && state.value[i2-1].layer === state.layer+1)) return { error: true, content: `Unexpected "${symbol}"`, line, start: state.value[i2].start }
