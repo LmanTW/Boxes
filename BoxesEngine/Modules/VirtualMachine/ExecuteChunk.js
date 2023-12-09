@@ -53,10 +53,10 @@ export default (ChunkManager, chunk, boxes, environment) => {
           if (data[1].type !== 'number') return { error: true, content: `Cannot Perform "${operationName}" Operation On <${data[1].type}>`, line: data[1].line, start: data[1].start }
 
           let value
-          if (chunk.executeData.type === '>') +data[0].value > +data[1].value
-          else if (chunk.executeData.type === '<') +data[0].value < +data[1].value
-          else if (chunk.executeData.type === '>=') +data[0].value >= +data[1].value
-          else if (chunk.executeData.type === '<=') +data[0].value <= +data[1].value
+          if (chunk.executeData.type === '>') value = +data[0].value > +data[1].value
+          else if (chunk.executeData.type === '<') value = +data[0].value < +data[1].value
+          else if (chunk.executeData.type === '>=') value = +data[0].value >= +data[1].value
+          else if (chunk.executeData.type === '<=') value = +data[0].value <= +data[1].value
 
           chunk.result = { type: 'boolean', value: (value) ? 'Yes' : 'No', line: data[0].line, start: data[0].start, end: data[1].end }
         } else if (chunk.executeData.type === '+') {
