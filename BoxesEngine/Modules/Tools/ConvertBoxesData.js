@@ -6,6 +6,7 @@ function convertBoxData (data) {
   if (data.type === 'number') return +data.value
   if (data.type === 'boolean') return data.value === 'Yes'
   if (data.type === 'empty') return undefined
+  if (data.type === 'fire') return null
   if (data.type === 'list') return data.value.map((item) => convertBoxData(item))
   if (data.type === 'externalFunction') return data.value
 

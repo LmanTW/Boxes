@@ -4,4 +4,4 @@
 
 #+@main <- function(0, 1) | data # { type: 'boolean', value: 'No' }
 
-+@main <- print('hi')
++@main <- print(String.split('hi,hi', ','))

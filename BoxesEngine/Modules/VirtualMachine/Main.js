@@ -10,13 +10,14 @@ export default class {
   #boxes
 
   constructor (environment, options) {
-    if (environment !== undefined) {
-      Object.keys(environment).forEach((item) => {
-        if (['Result', 'Input'].includes(item)) throw new Error(`Box Name "${item}" Is Reserved`)
+    environment = mergeObject(getDefaultEnvironment(), environment)
 
-        this.#environment[item] = convertJsData(environment[item])
-      })
-    }
+    Object.keys(environment).forEach((item) => {
+      if (['Result', 'Input'].includes(item)) throw new Error(`Box Name "${item}" Is Reserved`)
+
+      this.#environment[item] = convertJsData(environment[item])
+    })
+
 
     this.#options = mergeObject({
       keepRunning: false
@@ -88,6 +89,7 @@ export default class {
 import convertJsData from '../Tools/ConvertJsData.js'
 import mergeObject from '../Tools/MergeObject.js'
 
+import getDefaultEnvironment from './DefaultEnvironment.js'
 import ChunkManager from './ChunkManager.js'
 import executeChunk from './ExecuteChunk.js'
 import TaskManager from './TaskManager.js'
