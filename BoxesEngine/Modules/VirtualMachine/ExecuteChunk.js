@@ -3,35 +3,22 @@ export default (ChunkManager, chunk, boxes, environment) => {
   let action = chunk.actions[chunk.currentAction]
   let fragment = action[chunk.currentFragment]
 
-  if (fragment.type === 'operator' && fragment.value === '!')  {
-    if (chunk.executeData === undefined) {
-      chunk.executeData = true
-
-      ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, [action.slice(chunk.currentFragment+1, action.length)], false)
-
-      return { error: false }
-    } else {
-      if (chunk.returnedResult.type !== 'boolean') return { error: true, content: `Cannot Perform "Not" Operation On <${chunk.returnedResult.type}>`, line: fragment.line, start: fragment.line }
-     
-      chunk.result = { type: 'boolean', value: (chunk.returnedResult.value === 'Yes') ? 'No' : 'Yes', line: fragment.line, start: fragment.start, end: chunk.returnedResult.end }
-
-      chunk.currentFragment = action.length
-    }
-  } else if (fragment.type === 'operator' && fragment.value === '~') chunk.properties.push('async')
-  else if (fragment.type === 'operator' && ['+', '-', '*', '/', '=', '=='].includes(fragment.value)) {
+  if (action.filter((item) => item.type === 'operator' && ['=', '==', '>', '<', '+', '-', '*', '/'].includes(item.value)).length>  0) {
     if (chunk.executeData === undefined) {
       let type
-      if (fragment.value === '+') type = '+'
-      else if (fragment.value === '-') type = '-'
-      else if (fragment.value === '*') type = '*'
-      else if (fragment.value === '/') type = '/'
-      else if (fragment.value === '=') type = '='
-      else if (fragment.value === '==') type = '=='
+
+      for (let item of ['=', '==', '>', '<', '>=', '<=', '+', '-', '*', '/']) {
+        if (action.filter((item2) => item2.type === 'operator' && item2.value === item).length > 0) {
+          type = item
+
+          break
+        }
+      }
 
       let operators = action.filter((item) => item.type === 'operator' && item.value === type)
       if (operators.length > 1) return { error: true, content: `Unexpected <operator>`, line: operators[1].line, start: operators[1].start }
 
-      chunk.executeData = { type, chunks: splitArray(action, (item) => item.type === 'operator' && type), returnedResults: [] }
+      chunk.executeData = { type, chunks: splitArray(action, (item) => item.type === 'operator' && item.value === type), returnedResults: [] }
 
       ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, [chunk.executeData.chunks[0]], false)
 
@@ -42,7 +29,37 @@ export default (ChunkManager, chunk, boxes, environment) => {
       if (chunk.executeData.returnedResults.length >= chunk.executeData.chunks.length) {
         let data = chunk.executeData.returnedResults
 
-        if (chunk.executeData.type === '+') {
+       if (chunk.executeData.type === '=') {
+          if (data[0].name === undefined) return { error: true, content: `<${data[0].type}> Is Not In A Box`, line: data[0].line, start: data[0].start }
+          if (boxes[data[0].name].lock) return { error: true, content: `Box Is Locked: "${data[0].name}"`, line: data[0].line, start: data[0].start }
+
+          setTarget(data[0].name, data[0].path, data[1], boxes)
+
+          chunk.result = data[1]
+        } else if (chunk.executeData.type === '==') {
+          if (data[0].type !== data[1].type) chunk.result = { type: 'boolean', value: 'no', line: data[0].line, start: data[0].start, end: data[1].end }
+
+          if (data[0].type === 'list') {
+             chunk.result = { type: 'boolean', value: (isListEqual(data[0], data[1])) ? 'yes' : 'no', line: data[0].line, start: data[0].start, end: data[1].end }             
+          } else chunk.result = { type: 'boolean', value: (data[0].value === data[1].value) ? 'yes' : 'no', line: data[0].line, start: data[0].start, end: data[1].end }
+        } else if (['>', '<', '>=', '<='].includes(chunk.executeData.type)) {
+          let operationName
+          if (chunk.executeData.type === '>') operationName = 'More Than'
+          else if (chunk.executeData.type === '<') operationName = 'Less Than'
+          else if (chunk.executeData.type === '>=') operationName = 'More Than Or Equal To'
+          else if (chunk.executeData.type === '<=') operationName = 'Less Than Or Equal To'
+
+          if (data[0].type !== 'number') return { error: true, content: `Cannot Perform "${operationName}" Operation On <${data[0].type}>`, line: data[0].line, start: data[0].start }
+          if (data[1].type !== 'number') return { error: true, content: `Cannot Perform "${operationName}" Operation On <${data[1].type}>`, line: data[1].line, start: data[1].start }
+
+          let value
+          if (chunk.executeData.type === '>') +data[0].value > +data[1].value
+          else if (chunk.executeData.type === '<') +data[0].value < +data[1].value
+          else if (chunk.executeData.type === '>=') +data[0].value >= +data[1].value
+          else if (chunk.executeData.type === '<=') +data[0].value <= +data[1].value
+
+          chunk.result = { type: 'boolean', value: (value) ? 'Yes' : 'No', line: data[0].line, start: data[0].start, end: data[1].end }
+        } else if (chunk.executeData.type === '+') {
           if (data[0].type !== 'string' && data[0].type !== 'number') return { error: true, content: `Cannot Perform "Add" Operation On <${data[0].type}>`, line: data[0].line, start: data[0].start }
           if (data[1].type !== 'string' && data[1].type !== 'number') return { error: true, content: `Cannot Perform "Add" Operation Using <${data[1].type}>`, line: data[1].line, start: data[1].start }
 
@@ -65,12 +82,6 @@ export default (ChunkManager, chunk, boxes, environment) => {
 
           if (value === Infinity) chunk.result = { type: 'empty', value: 'Empty', line: data[0].line, start: data[0].start, end: data[1].start }
           else chunk.result = { type: 'number', value: `${value}`, line: data[0].line, start: data[0].start, end: data[1].end }
-        } else if (chunk.executeData.type === '==') {
-          if (data[0].type !== data[1].type) chunk.result = { type: 'boolean', value: 'No', line: data[0].line, start: data[0].start, end: data[1].end }
-
-          if (data[0].type === 'list') {
-            
-          } else chunk.result = { type: 'boolean', value: (data[0].value === data[1].value) ? 'Yes' : 'No', line: data[0].line, start: data[0].start, end: data[1].end }
         }
 
         chunk.currentFragment = action.length
@@ -81,7 +92,26 @@ export default (ChunkManager, chunk, boxes, environment) => {
         return { error: false }
       }
     }
-  } else if (['string', 'number', 'boolean', 'empty', 'fire', 'actionList'].includes(fragment.type)) chunk.result = fragment
+  } else if (fragment.type === 'operator' && fragment.value === '!')  {
+    if (chunk.executeData === undefined) {
+      chunk.executeData = true
+
+      ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, [action.slice(chunk.currentFragment+1, action.length)], false)
+
+      return { error: false }
+    } else {
+      if (chunk.returnedResult.type !== 'boolean') return { error: true, content: `Cannot Perform "Not" Operation On <${chunk.returnedResult.type}>`, line: fragment.line, start: fragment.line }
+     
+      chunk.result = { type: 'boolean', value: (chunk.returnedResult.value === 'Yes') ? 'No' : 'Yes', line: fragment.line, start: fragment.start, end: chunk.returnedResult.end }
+
+      chunk.currentFragment = action.length
+    }
+  } else if (fragment.type === 'operator' && fragment.value === '~') chunk.properties.push('async')
+  else if (['string', 'number', 'boolean', 'empty', 'fire', 'actionList'].includes(fragment.type)) {    
+    if (action.length > chunk.currentFragment+1) return { error: true, content: `Unexpected <${action[chunk.currentFragment+1].type}>`, line: action[chunk.currentFragment+1].line, start: action[chunk.currentFragment+1].start }
+
+    chunk.result = fragment
+  }
   else if (fragment.type === 'name') {
     if (!['Result', 'Input'].includes(fragment.value) && boxes[fragment.value] === undefined && environment[fragment.value] === undefined) return { error: true, content: `Box Not Found: "${fragment.value}"`, line: fragment.line, start: fragment.start }
 
@@ -93,6 +123,8 @@ export default (ChunkManager, chunk, boxes, environment) => {
     chunk.result = { type: data.type, value: data.value, line: data.line, start: data.start, end: data.end, name: fragment.value, path: [] }
   } else if (fragment.type === 'list' || fragment.type === 'inputList') {
     if (chunk.executeData === undefined) {
+      if (action[chunk.currentFragment+1] !== undefined && action[chunk.currentFragment+1].type !== 'inputList') return { error: true, content: `Unexpected <${action[chunk.currentFragment+1].type}>`, line: action[chunk.currentFragment+1].line, start: action[chunk.currentFragment+1].start }
+
       chunk.executeData = { state: 'gettingItems', returnedResults: [] }
 
       if (fragment.value.length > 0) ChunkManager.addChunk(chunk, undefined, { result: chunk.result }, [fragment.value[0]], false)
@@ -154,7 +186,7 @@ export default (ChunkManager, chunk, boxes, environment) => {
     } else if (chunk.executeData.state === 'waitingActions') {
       chunk.result = chunk.returnedResult
     }
-  }
+  } else return { error: true, content: `Unexpected <${fragment.type}>`, line: fragment.line, start: fragment.start }
 
   if (chunk.currentFragment >= action.length-1) {
     chunk.currentFragment = 0
@@ -178,3 +210,6 @@ export default (ChunkManager, chunk, boxes, environment) => {
 }
 
 import splitArray from '../Tools/SplitArray.js'
+
+import isListEqual from './EqualList.js'
+import setTarget from './SetTarget.js'

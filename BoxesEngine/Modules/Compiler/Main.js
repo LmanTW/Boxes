@@ -21,8 +21,8 @@ export default class {
 
         let chunks = splitArray(data.fragments, (item) => item.type === 'operator' && item.value === symbol)
 
-        if (symbol === '<-') operations.push({ target: chunks[0], source: splitArray(chunks[1], (item) => item.type === 'operator' && item.value === '>'), line: i+1 })
-        else operations.push({ target: chunks[1], source: splitArray(chunks[0], (item) => item.type === 'operator' && item.value === '>'), line: i+1 })
+        if (symbol === '<-') operations.push({ target: chunks[0], source: splitArray(chunks[1], (item) => item.type === 'operator' && item.value === '|').filter((item) => item.length > 0), line: i+1 })
+        else operations.push({ target: chunks[1], source: splitArray(chunks[0], (item) => item.type === 'operator' && item.value === '|').filter((item) => item.length > 0), line: i+1 })
       }
     }
 

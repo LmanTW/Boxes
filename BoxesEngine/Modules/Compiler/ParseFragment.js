@@ -83,7 +83,7 @@ export default (string, line) => {
           i--  
         } else state.value+=string[i]
       } else if (state.type === 'name') {
-        if ('+-*/~@!=><,'.includes(string[i])) {
+        if ('+-*/~@!=><,|'.includes(string[i])) {
           fragments.push({ type: 'name', value: state.value, line, start: state.start, end: i })
 
           state = {}
@@ -125,4 +125,4 @@ export default (string, line) => {
   return { error: false, fragments: fragments2 }
 }
 
-const operators = ['+', '-', '*', '/', '~', '@', '!', '=', '==', '<', '>', '<-', '->', ',']
+const operators = ['+', '-', '*', '/', '~', '@', '!', '=', '==', '<', '>', '>=', '<=', '<-', '->', ',', '|']
