@@ -40,31 +40,35 @@ export default class {
         let globalChunk = this.#ChunkManager.addChunk(undefined, { name: '<global>' }, {}, operations[0].source, false)
         let result = { type: 'empty', value: 'Empty' }
 
-        while (this.#TaskManager.tasks.length > 0) {
-          let chunk = this.#ChunkManager.chunks[this.#TaskManager.nextTask()]
+        let interval = setInterval(() => {
+          if (this.#TaskManager.tasks.length > 0) {
+            let chunk = this.#ChunkManager.chunks[this.#TaskManager.nextTask()]
 
-          if (chunk.state === 'running') {
-            let data = executeChunk(this.#ChunkManager, chunk, this.#boxes, this.#environment)
-            if (data.error) return resolve(data)
+            if (chunk.state === 'running') {
+              let data = executeChunk(this.#ChunkManager, chunk, this.#boxes, this.#environment)
+              if (data.error) return resolve(data)
 
-            result = chunk.result
+              result = chunk.result
+            }
+
+            if (this.#ChunkManager.chunks[globalChunk] === undefined && currentOperation < operations.length-1) {
+              let data = getTarget(operations[currentOperation].target, this.#boxes, mergeObject(this.#environment, { Result: chunk.result, Input: chunk.input }), operations[currentOperation].line)
+              if (data.error) return resolve(data)
+
+              setTarget(data.name, data.path, chunk.result, this.#boxes)
+
+              currentOperation++
+
+              globalChunk = this.#ChunkManager.addChunk(undefined, { name: '<global>' }, {}, operations[currentOperation].source, false)
+            }
+          } else {
+            if (!this.#options.keepRunning) {
+              clearInterval(interval)
+
+              resolve(result)
+            }
           }
-
-          if (this.#ChunkManager.chunks[globalChunk] === undefined) {
-            let data = getTarget(operations[currentOperation].target, this.#boxes, mergeObject(this.#environment, { Result: chunk.result, Input: chunk.input }), operations[currentOperation].line)
-            if (data.error) return resolve(data)
-
-            setTarget(data.name, data.path, chunk.result, this.#boxes)
-            
-            if (currentOperation >= operations.length-1) break
-
-            currentOperation++
-
-            globalChunk = this.#ChunkManager.addChunk(undefined, { name: '<global>' }, {}, operations[currentOperation].source, false)
-          }
-        }
-
-        resolve(result)
+        })
       })
     } else throw new Error(`Cannot Start Virtual Machine (State: ${this.#state})`)
   }
