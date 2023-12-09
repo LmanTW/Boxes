@@ -3,11 +3,11 @@ export default (ChunkManager, chunk, boxes, environment) => {
   let action = chunk.actions[chunk.currentAction]
   let fragment = action[chunk.currentFragment]
 
-  if (action.filter((item) => item.type === 'operator' && ['=', '==', '>', '<', '+', '-', '*', '/'].includes(item.value)).length>  0) {
+  if (action.filter((item) => item.type === 'operator' && ['=', '||', '&&', '==', '>', '<', '+', '-', '*', '/'].includes(item.value)).length>  0) {
     if (chunk.executeData === undefined) {
       let type
 
-      for (let item of ['=', '==', '>', '<', '>=', '<=', '+', '-', '*', '/']) {
+      for (let item of ['=', '||', '&&', '==', '>', '<', '>=', '<=', '+', '-', '*', '/']) {
         if (action.filter((item2) => item2.type === 'operator' && item2.value === item).length > 0) {
           type = item
 
@@ -36,6 +36,11 @@ export default (ChunkManager, chunk, boxes, environment) => {
           setTarget(data[0].name, data[0].path, data[1], boxes)
 
           chunk.result = data[1]
+        } else if (chunk.executeData.type === '||' || chunk.executeData.type === '&&') {
+          if (data[0].type !== 'boolean') return { error: true, content: `Cannot Perform "${(chunk.executeData.type === '||') ? 'Or' : 'And'}" Operation On <${data[0].type}>`, line: data[0].line, start: data[0].start }
+          if (data[1].type !== 'boolean') return { error: true, content: `Cannot Perform "${(chunk.executeData.type === '||') ? 'Or' : 'And'}" Operation Using <${data[1].type}>`, line: data[1].line, start: data[1].start }
+
+          chunk.result = { type: 'boolean', value: ((chunk.executeData.type === '||') ? data[0].value === 'Yes' || data[1].value === 'Yes' : data[0].value === 'Yes' && data[1].value === 'Yes') ? 'Yes' : 'No', line: data[0].line, start: data[0].start, end: data[1].end }
         } else if (chunk.executeData.type === '==') {
           if (data[0].type !== data[1].type) chunk.result = { type: 'boolean', value: 'no', line: data[0].line, start: data[0].start, end: data[1].end }
 

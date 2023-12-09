@@ -17,7 +17,7 @@ export default class {
         if (directionAmount < 1) return { error: true, content: `Cannot Found Any Direction`, line: i+1 }
         if (directionAmount > 1) return { error: true, content: `Too Many Directions`, line: i+1 }
 
-        let symbol = (data.fragments.filter((item) => item.type === 'operator' && item.value === '<-') > 0) ? '<-' : '->'
+        let symbol = (data.fragments.filter((item) => item.type === 'operator' && item.value === '<-').length > 0) ? '<-' : '->'
 
         let chunks = splitArray(data.fragments, (item) => item.type === 'operator' && item.value === symbol)
 
