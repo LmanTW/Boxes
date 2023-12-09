@@ -5,10 +5,50 @@ export default () => {
 
     'String.from': (data) => {return getDataValue(data)},
     'String.split': (data, separator) => {
-      if (typeof data !== 'string') throw `Cannot Perform "split" Operation On <${getTypeName(data)}>`
-      if (typeof separator !== 'string') throw `Cannot Perform "split" Operation Using <${getTypeName(data)}>`
+      if (typeof data !== 'string') throw `Cannot Perform "Split" Operation On <${getTypeName(data)}>`
+      if (typeof separator !== 'string') throw `Cannot Perform "Split" Operation Using <${getTypeName(data)}>`
 
       return data.split(separator)
+    },
+    'String.substring': (data, start, end) => {
+      if (typeof data !== 'string') throw `Cannot Perform "Substring" Operation On <${getTypeName(data)}>`
+      if (typeof start !== 'number') throw `Cannot Perform "Substring" Operation Using <${getTypeName(start)}> (start)`
+      if (typeof end !== 'number') throw `Cannot Perform "Substring" Operation Using <${getTypeName(end)}> (end)`
+
+      return data.substring(start, end)
+    },
+
+    'Number.from': (data) => {
+      if (typeof data === 'string') {
+        if (isNaN(+data)) return undefined
+
+        return +data
+      } else if (typeof data === 'number') return data
+      else if (typeof data === 'boolean') return +data
+      else if (typeof data === 'undefined' || data === null) return 0
+      else if (Array.isArray(data)) return undefined
+    },
+
+    'List.add': (list, data) => {
+      if (!Array.isArray(list)) throw `Cannot Perform "Add To List" Operation On <${getTypeName(list)}>`
+
+      return list.concat([data])
+    },
+    'List.insert': (list, index, data) => {
+      if (!Array.isArray(list)) throw `Cannot Perform "Insert To List" Operation On <${getTypeName(list)}>`
+      if (typeof index !== 'number') throw `Cannot Perform "Insert To List" Operation Using <${getTypeName(index)}> (index)`
+
+      list = copyArray(list)
+
+      list.splice(index, 0, data)
+      
+      return list
+    },
+    'List.join': (data, separator) => {
+      if (!Array.isArray(data)) throw `Cannot Perform "Join" Operation On <${getTypeName(data)}>`
+      if (typeof separator !== 'string') throw `Cannot Perform "Join" Operation Using <${getTypeName(separator)}>`
+
+      return data.join(separator)
     }
   }
 }
@@ -42,8 +82,10 @@ function getDataValue (data) {
 
 //Get data type name
 function getTypeName (data) {
-  if (['string', 'number', 'boolean'].includes(typeof data)) return typeof data
+  if (['string', 'number', 'boolean'].incluEdes(typeof data)) return typeof data
   if (typeof data === 'undefined') return 'Empty'
   if (data === null) return 'Fire'
-  if (Array.isArray(data)) return 'List'
+  if (Array.isArray(data)) return 'list'
 }
+
+import copyArray from '../Tools/CopyArray.js'

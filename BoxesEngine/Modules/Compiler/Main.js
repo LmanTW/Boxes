@@ -13,11 +13,11 @@ export default class {
         data = parseList(data.fragments, i+1)
         if (data.error) return data
 
-        let directionAmount = getArrayIncludeAmount(data.fragments, (item) => item.type === 'operator' && (item.value === '<-' || item.value === '->'))
+        let directionAmount = data.fragments.filter((item) => item.type === 'operator' && (item.value === '<-' || item.value === '->'))
         if (directionAmount < 1) return { error: true, content: `Cannot Found Any Direction`, line: i+1 }
         if (directionAmount > 1) return { error: true, content: `Too Many Directions`, line: i+1 }
 
-        let symbol = (getArrayIncludeAmount(data.fragments, (item) => item.type === 'operator' && item.value === '<-') > 0) ? '<-' : '->'
+        let symbol = (data.fragments.filter((item) => item.type === 'operator' && item.value === '<-') > 0) ? '<-' : '->'
 
         let chunks = splitArray(data.fragments, (item) => item.type === 'operator' && item.value === symbol)
 
@@ -30,7 +30,6 @@ export default class {
   }
 }
 
-import getArrayIncludeAmount from '../Tools/GetArrayIncludeAmount.js'
 import splitArray from '../Tools/SplitArray.js'
 
 import parseFragment from './ParseFragment.js'

@@ -5,8 +5,10 @@ export default (name, path, data, boxes) => {
 
     for (let i = 0; i < path.length-1; i++) target = target.value[path[i]]
  
-    target.value[path[path.length-1]] = data
+    if (data.type === 'fire') target.value.splice(path[path.length-1], 1)
+    else target.value[path[path.length-1]] = data
   } else {
-    boxes[name].data = data
+    if (data.type === 'fire') delete boxes[name]
+    else boxes[name].data = data
   }
 }
