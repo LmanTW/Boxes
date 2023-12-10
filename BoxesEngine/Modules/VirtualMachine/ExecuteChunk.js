@@ -27,17 +27,34 @@ export default (ChunkManager, chunk, boxes, environment) => {
       if (chunks[1].length > 1) return { error: true, content: `Unexpected <${chunks[1][1].type}>`, line: chunks[1][1].line, start: chunks[1][1].start }
       if (chunks[2].length > 1) return { error: true, content: `Unexpected <${chunks[2][1].type}>`, line: chunks[2][1].line, start: chunks[2][1].start }
 
-      chunk.executeData = { type: 'gettingCondition', condition: splitArray(action, (item) => item.type === 'operator' && item.value === '?')[0], returnedResults: [] }
+      chunk.executeData = { type: 'gettingCondition', condition: chunks[0], chunks: chunks.slice(1, chunks.length).map((item) => item[0]) }
 
-      ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, condition, false)
+      ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, [chunk.executeData.condition], false)
 
-      return { error: true }
+      return { error: false }
     } else if (chunk.executeData.type === 'gettingCondition') {
+      if (chunk.returnedResult.type !== 'boolean') return { error: true, content: `Can Not Perform "If" Operation Using <${chunk.returnedResult.type}>`, line: chunk.returnedResult.line, start: chunk.returnedResult.start }
+
+      if (chunk.returnedResult.value === 'Yes') {
+        chunk.executeData.type = 'waitingActions'
       
-    }
+        ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, chunk.executeData.chunks[0].value, false)
+
+        return { error: false }
+      } else {
+        if (chunk.executeData.chunks.length > 1) {
+          chunk.executeData.type = 'waitingActions'
+
+          ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, chunk.executeData.chunks[1].value, false)
+
+          return { error: false }
+        }
+      }
+    } else if (chunk.executeData.type === 'waitingActions') chunk.result = chunk.returnedResult
 
     chunk.currentFragment = action.length
-  } if (action.filter((item) => item.type === 'operator' && ['=', '||', '&&', '==', '>', '<', '+', '-', '*', '/'].includes(item.value)).length>  0) {
+    chunk.executeData = undefined
+  } else if (action.filter((item) => item.type === 'operator' && ['=', '||', '&&', '==', '>', '<', '+', '-', '*', '/'].includes(item.value)).length>  0) {
     if (chunk.executeData === undefined) {
       let type
 
@@ -57,7 +74,7 @@ export default (ChunkManager, chunk, boxes, environment) => {
       ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, [chunk.executeData.chunks[0]], false)
 
       return { error: false }
-    } else {
+    } else {  
       chunk.executeData.returnedResults.push(chunk.returnedResult)
 
       if (chunk.executeData.returnedResults.length >= chunk.executeData.chunks.length) {
@@ -221,8 +238,6 @@ export default (ChunkManager, chunk, boxes, environment) => {
             return { error: false }
           }
         }
-
-        chunk.executeData = undefined
       } else {
         ChunkManager.addChunk(chunk, undefined, { result: chunk.result }, [fragment.value[chunk.executeData.returnedResults.length]])
         
@@ -234,6 +249,8 @@ export default (ChunkManager, chunk, boxes, environment) => {
 
       chunk.result = { type: chunk.returnedResult.data.type, value: chunk.returnedResult.data.value, line: fragment.line, start: fragment.start }
     }
+
+    chunk.executeData = undefined
   } else return { error: true, content: `Unexpected <${fragment.type}>`, line: fragment.line, start: fragment.start }
 
   if (chunk.currentFragment >= action.length-1) {

@@ -4,4 +4,7 @@
 
 #+@main <- function(0, 1) | data # { type: 'boolean', value: 'No' }
 
-+@main <- Yes ? {} : {} {}
++count <- 0
++@loop <- { count < 10 ? { count = count + 1 | print(count) | loop() } : { print('Stoped', count) } }
+
++@main <- print('Running') | loop()

@@ -7,7 +7,7 @@ import { Compiler, VirtualMachine } from '../BoxesEngine/API.js'
 (async () => {
   let data = Compiler.compile(fs.readFileSync(`${dirname(fileURLToPath(import.meta.url))}/test.boxes`, 'utf8'))
 
-  if (data.error) console.log(`Compiler Error: ${data}`)
+  if (data.error) console.log(`Compiler Error`, data)
   else {
     let vm = new VirtualMachine()
 
