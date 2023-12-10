@@ -3,7 +3,41 @@ export default (ChunkManager, chunk, boxes, environment) => {
   let action = chunk.actions[chunk.currentAction]
   let fragment = action[chunk.currentFragment]
 
-  if (action.filter((item) => item.type === 'operator' && ['=', '||', '&&', '==', '>', '<', '+', '-', '*', '/'].includes(item.value)).length>  0) {
+  if (action.filter((item) => item.type === 'operator' && item.value === '?').length > 0) {
+    if (chunk.executeData === undefined) {
+      let operators = { '?': [], ':': [] }
+
+      action.forEach((item, index) => {
+        if (item.type === 'operator') {
+          if (item.value === '?') operators['?'].push({ data: item, index })
+          else if (item.value === ':') operators[':'].push({ data: item, index })
+        }
+      })
+
+      if (operators['?'].length > 1) return { error: true, content: `Unexpected <operator>`, line: operators['?'][0].data.line, start: operators['?'][0].data.start }
+      if (operators[':'].length > 1) return { error: true, content: `Unexpected <operator>`, line: operators[':'][0].data.line, start: operators[':'][0].data.start }
+
+      if (action[operators['?'][0].index-1] === undefined) return { error: true, content: `Expecting <anything>`, line: operators['?'][0].data.line, start: 0 }
+      if (action[operators['?'][0].index+1] === undefined) return { error: true, content: `Expecting <actionList>`, line: action[operators['?'][0].index].line, start: action[operators['?'][0].index].end }
+      if (action[operators['?'][0].index+1].type !== 'actionList') return { error: true, content: `Unexpected <${action[operators['?'][0].index+1].type}>`, line: action[operators['?'][0].index+1].line, start: action[operators['?'][0].index+1].start }
+      if (operators[':'].length > 0 && action[operators[':'][0].index+1] === undefined) return { error: true, content: `Expecting <actionList>` }
+
+      let chunks = splitArray(action, (item) => item.type === 'operator' && (item.value === '?' || item.value === ':'))
+
+      if (chunks[1].length > 1) return { error: true, content: `Unexpected <${chunks[1][1].type}>`, line: chunks[1][1].line, start: chunks[1][1].start }
+      if (chunks[2].length > 1) return { error: true, content: `Unexpected <${chunks[2][1].type}>`, line: chunks[2][1].line, start: chunks[2][1].start }
+
+      chunk.executeData = { type: 'gettingCondition', condition: splitArray(action, (item) => item.type === 'operator' && item.value === '?')[0], returnedResults: [] }
+
+      ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, condition, false)
+
+      return { error: true }
+    } else if (chunk.executeData.type === 'gettingCondition') {
+      
+    }
+
+    chunk.currentFragment = action.length
+  } if (action.filter((item) => item.type === 'operator' && ['=', '||', '&&', '==', '>', '<', '+', '-', '*', '/'].includes(item.value)).length>  0) {
     if (chunk.executeData === undefined) {
       let type
 
