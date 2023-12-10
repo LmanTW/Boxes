@@ -24,7 +24,7 @@ export default class {
 
 
     this.#options = mergeObject({
-      chukPerExecution: 100,
+      chunkPerExecution: 100,
       executionInterval: 0,
 
       keepRunning: false
@@ -69,7 +69,7 @@ export default class {
 
   // Tick
   #tick () {
-    for (let i = 0; i < this.#options.chukPerExecution; i++) {
+    for (let i = 0; i < this.#options.chunkPerExecution; i++) {
       if (this.#TaskManager.tasks.length > 0) {
         let chunk = this.#ChunkManager.chunks[this.#TaskManager.nextTask()]
 

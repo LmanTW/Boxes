@@ -32,7 +32,7 @@ export default class {
       state: 'running',
       
       async,
-      input: (environment.input === undefined) ? { type: 'list', value: [] } : environment.input,
+      input: (environment.input === undefined) ? { type: 'list', value: [], hi: 0 } : environment.input,
       actions,
 
       currentAction: 0,

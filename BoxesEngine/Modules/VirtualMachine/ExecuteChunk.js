@@ -167,11 +167,11 @@ export default (ChunkManager, chunk, boxes, environment) => {
     if (action.length > chunk.currentFragment+1) return { error: true, content: `Unexpected <${action[chunk.currentFragment+1].type}>`, line: action[chunk.currentFragment+1].line, start: action[chunk.currentFragment+1].start }
 
     chunk.result = fragment
-  }
-  else if (fragment.type === 'name') {
+  } else if (fragment.type === 'name') {
     if (!['Result', 'Input'].includes(fragment.value) && boxes[fragment.value] === undefined && environment[fragment.value] === undefined) return { error: true, content: `Box Not Found: "${fragment.value}"`, line: fragment.line, start: fragment.start }
 
     let data
+
     if (fragment.value === 'Result') data = { type: chunk.result.type, value: chunk.result.value, line: fragment.line, start: fragment.start, end: fragment.end, name: fragment.value, path: [] }
     else if (fragment.value === 'Input') data = { type: chunk.input.type, value: chunk.input.value, line: fragment.line, start: fragment.start, end: fragment.end, name: fragment.value, path: [] }
     else data = (boxes[fragment.value] === undefined) ? environment[fragment.value] : boxes[fragment.value].data
@@ -183,7 +183,7 @@ export default (ChunkManager, chunk, boxes, environment) => {
 
       chunk.executeData = { state: 'gettingItems', returnedResults: [] }
 
-      if (fragment.value.length > 0) ChunkManager.addChunk(chunk, undefined, { result: chunk.result }, [fragment.value[0]], false)
+      if (fragment.value.length > 0) ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, [fragment.value[0]], false)
       else {
         if (chunk.result.type === 'list') return { error: true, content: `Cannot Perform "Read" Operation Using <empty>` }
         else chunk.returnedData = { type: 'empty', value: 'Empty', line: fragment.line, start: fragment.start, end: fragment.end }
@@ -274,6 +274,7 @@ export default (ChunkManager, chunk, boxes, environment) => {
   return { error: false }
 }
 
+import { executablePath } from 'puppeteer'
 import splitArray from '../Tools/SplitArray.js'
 
 import callJsFunction from './CallJsFunction.js'

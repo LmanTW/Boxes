@@ -1,10 +1,4 @@
-#+data <- Empty
-
-#+@function <- { Input(0) + Input(1) | Result > 0 | data = Result }
-
-#+@main <- function(0, 1) | data # { type: 'boolean', value: 'No' }
-
 +count <- 0
-+@loop <- { count < 10 ? { count = count + 1 | print(count) | loop() } : { print('Stoped') } }
++@loop <- { Input(0) < 10 ? { print(Input(0)) | loop(Input(0)+1) } : { print('Stoped') } }
 
-+@main <- print('Running') | loop(0) | print('Hi')
++@main <- print('Running') | loop(0)
