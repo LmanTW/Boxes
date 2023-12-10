@@ -8,7 +8,7 @@ A goofy programing language which is all about 📦.
 Here's an over-engineered example for printing `hello`:
 ```
 +aList <- ['h', 'e', 'l', 'l', 'o'] # Create a new box.
-+@main <- Array.join(aList, '') | print(Result) # Combine all the letters in the list (anArray).
++@main <- List.join(aList, '') | print(Result) # Combine all the letters in the list (anArray).
 ```
 
 # Contents
@@ -18,6 +18,7 @@ Here's an over-engineered example for printing `hello`:
 * [Delete 📦](#delete-)
 * [Expressions](#expressions)
 * [Functions](#funcitons)
+* [Result and Input](#result-and-input)
 * [Lists](#lists)
 
 ## Structure
@@ -106,6 +107,9 @@ When you're using a `<actionList>`, the actions inside of it will not be execute
 
 +@main <- aFunction(2, 5) # 5
 ```
+
+## Result and Input
+
 
 ## Lists
 Lists are lovely, you can use `<list>` to do all kind of cool stuff, you can use `<inputList>` to read / set / remove a item from list using an index:
