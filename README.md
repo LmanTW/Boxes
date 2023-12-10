@@ -18,6 +18,7 @@ Here's an over-engineered example for printing `hello`:
 * [Delete 📦](#delete-)
 * [Expressions](#expressions)
 * [Functions](#funcitons)
+* [Lists](#lists)
 
 ## Structure
 To do anything in 📦, you **must** store the result into a 📦:
@@ -105,3 +106,14 @@ When you're using a `<actionList>`, the actions inside of it will not be execute
 
 +@main <- aFunction(2, 5) # 5
 ```
+
+## Lists
+Lists are lovely, you can use `<list>` to do all kind of cool stuff, you can use `<inputList>` to read / set / remove a item from list using an index:
+```
++aList <- [0, 1, 2]
+
++main <- print(aList(0)) # Read item 0 from the list, the result is: 0
+main <- print(aList(0) = 1) # Set item 0 to 1
+main <- print(aList(0) = Fire) # Remove item 0
+```
+(The index starts at 0)
