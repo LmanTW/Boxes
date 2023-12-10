@@ -14,9 +14,9 @@ Here's an over-engineered example for printing `hello`:
 # Contents
 * [Structure](#structure)
 * [Data Types](#data-types)
-* [Create 📦](#create)
-* [Delete 📦](#delete)
-* [Math](#math)
+* [Create 📦](#create-)
+* [Delete 📦](#delete-)
+* [Expressions](#expressions)
 * [Functions](#funcitons)
 
 ## Structure
@@ -67,7 +67,32 @@ You can delete a 📦 by "giving" it a `<Fire>`, so you can burn it:
 aBox <- Fire
 ```
 
-## Math
+## Expressions
+You can use expressions to do many cool things, like... math?
+```
++aBox <- Empty
+
+aBox <- 1+1 # Addition
+aBox <- 1-1 # Subtraction
+aBox <- 1*1 # Multiplication
+aBox <- 1/1 # Division
+
+aBox <- 1 == 1 # Equal
+aBox <- 1 > 0 # Greater than
+aBox <- 1 >= 0 # Greater than or equal to
+aBox <- 0 < 1 # Less than
+aBox <- 0 <= 1 # Less than or equal to
+
+aBox <- Yes || No # Or
+aBox <- Yes && Yes # And
+
+aBox <- aBox = 1 # Set box
+```
+You can also do something like:
+```
++aBox <- 1 == 1 || 1 == 1
+```
+But I can't guarantee that it will work as expected, because I'm just simply not smart enough to write a VM (Yes, it's done in the VM) that's smart enough to do that.
 
 ## Functions
 We all love functions, so to make 📦 as likeable as possible, we also have functions. you can create a function using `<actionList>`:
