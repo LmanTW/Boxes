@@ -4,19 +4,27 @@ export default () => {
     'print': (...data) => console.log(...data.map((item) => getPrintContent(item, 0))),
 
     'String.from': (data) => {return getDataValue(data)},
-    'String.split': (data, separator) => {
-      if (typeof data !== 'string') throw `Cannot Perform "Split" Operation On <${getTypeName(data)}>`
-      if (typeof separator !== 'string') throw `Cannot Perform "Split" Operation Using <${getTypeName(data)}>`
-
-      return data.split(separator)
-    },
-    'String.substring': (data, start, end) => {
-      if (typeof data !== 'string') throw `Cannot Perform "Substring" Operation On <${getTypeName(data)}>`
+    'String.substring': (string, start, end) => {
+      if (typeof string !== 'string') throw `Cannot Perform "Substring" Operation On <${getTypeName(string)}>`
       if (typeof start !== 'number') throw `Cannot Perform "Substring" Operation Using <${getTypeName(start)}> (start)`
       if (typeof end !== 'number') throw `Cannot Perform "Substring" Operation Using <${getTypeName(end)}> (end)`
 
       return data.substring(start, end)
     },
+    'String.replace': (string, pattern, replacement) => {
+      if (typeof string !== 'string') throw `Cannot Perform "Replace" Operation On <${getTypeName(string)}>`
+      if (typeof pattern !== 'string') throw `Cannot Perform "Replace" Operation Using <${getTypeName(pattern)}> (pattern)`
+      if (typeof replacement !== 'string') throw `Cannot Perform "Replace" Operation Using <${getTypeName(replacement)}> (replacement)`
+
+      return string.replaceAll(pattern, replacement)
+    },
+    'String.split': (string, separator) => {
+      if (typeof string !== 'string') throw `Cannot Perform "Split" Operation On <${getTypeName(string)}>`
+      if (typeof separator !== 'string') throw `Cannot Perform "Split" Operation Using <${getTypeName(separator)}>`
+
+      return string.split(separator)
+    },
+
 
     'Number.from': (data) => {
       if (typeof data === 'string') {
@@ -27,6 +35,12 @@ export default () => {
       else if (typeof data === 'boolean') return +data
       else if (typeof data === 'undefined' || data === null) return 0
       else if (Array.isArray(data)) return undefined
+    },
+    'Number.toFixed': (number, digits) => {
+      if (typeof number !== 'number') throw `Cannot Perform "To Fixed" Operation On <${getTypeName(number)}>`
+      if (typeof digits !== 'number') throw `Cannot Perform "To Fixed" Operation Using <${getTypeName(digits)}> (digits)`
+
+      return parseInt(number).toFixed(digits)
     },
 
     'List.add': (list, data) => {
@@ -49,6 +63,50 @@ export default () => {
       if (typeof separator !== 'string') throw `Cannot Perform "Join" Operation Using <${getTypeName(separator)}>`
 
       return data.join(separator)
+    },
+
+    'Math.PI': 3.14,
+    'Math.abs': (number) => {
+      if (typeof number !== 'number') throw `Cannot Perform "Absolute" Operation On <${getTypeName(number)}>`
+
+      return Math.abs(number)
+    },
+    'Math.ceil': (number) => {
+      if (typeof number !== 'number') throw `Cannot Perform "Ceil" Operation On <${getTypeName(number)}>`
+
+      return Math.ceil(number)      
+    },
+    'Math.cos': (number) => {
+      if (typeof number !== 'number') throw `Cannot Perform "Cosine" Operation On <${getTypeName(number)}>`
+
+      return Math.cos(number)
+    },
+    'Math.floor': (number) => {
+      if (typeof number !== 'number') throw `Cannot Perform "Floor" Operation On <${getTypeName(number)}>`
+
+      return Math.floor(number)
+    },
+    'Math.pow': (number, exponent) => {
+       if (typeof number !== 'number') throw `Cannot Perform "Power" Operation On <${getTypeName(number)}>`
+       if (typeof exponent !== 'number') throw `Cannot Perform "Power" Operation Using <${getTypeName(exponent)}>`
+
+       return Math.pow(number, exponent)
+    },
+    'Math.random': (min, max) => {
+      if (typeof min !== 'number') throw `Cannot Perform "Random" Operation Using <${getTypeName(min)}> (min)`
+      if (typeof max !== 'number') throw `Cannot Perform "Random" Operation Using <${getTypeName(max)}> (max)`
+
+      return Math.floor(Math.random()*max)+min
+    },
+    'Math.sin': (number) => {
+      if (typeof number !== 'number') throw `Cannot Perform "Sine" Operation On <${getTypeName(number)}>`
+
+      return Math.sin(number)
+    },
+    'Math.turnc': (number) => {
+      if (typeof number !== 'number') throw `Cannot Perform "Truncate" Operation On <${getTypeName(number)}>`
+
+      return Math.trunc(number)
     }
   }
 }
@@ -88,4 +146,5 @@ function getTypeName (data) {
   if (Array.isArray(data)) return 'list'
 }
 
+import { pa } from 'translatte/languages.js'
 import copyArray from '../Tools/CopyArray.js'
