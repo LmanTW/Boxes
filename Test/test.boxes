@@ -5,6 +5,6 @@
 #+@main <- function(0, 1) | data # { type: 'boolean', value: 'No' }
 
 +count <- 0
-+@loop <- { count < 10 ? { count = count + 1 | print(count) | loop() } : { print('Stoped', count) } }
++@loop <- { count < 10 ? { count = count + 1 | print(count) | loop() } : { print('Stoped') } }
 
-+@main <- print('Running') | loop()
++@main <- print('Running') | loop(0) | print('Hi')
