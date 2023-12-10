@@ -76,7 +76,7 @@ export default (string, line) => {
         } else state.value+=string[i]
       } else if (state.type === 'number') {
         if (!'0123456789.'.includes(string[i])) {
-          fragments.push({ type: 'number', value: state.value, line, start: state.start, end: i })
+          fragments.push({ type: 'number', value: state.value, line, start: state.start, end: i-1 })
 
           state = {}
 
@@ -84,7 +84,7 @@ export default (string, line) => {
         } else state.value+=string[i]
       } else if (state.type === 'name') {
         if ('+-*/~@!=><|&,'.includes(string[i])) {
-          fragments.push({ type: 'name', value: state.value, line, start: state.start, end: i })
+          fragments.push({ type: 'name', value: state.value, line, start: state.start, end: i-1 })
 
           state = {}
 
