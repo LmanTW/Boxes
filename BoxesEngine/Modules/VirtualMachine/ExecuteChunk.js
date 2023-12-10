@@ -186,7 +186,7 @@ export default (ChunkManager, chunk, boxes, environment) => {
       if (fragment.value.length > 0) ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, [fragment.value[0]], false)
       else {
         if (chunk.result.type === 'list') return { error: true, content: `Cannot Perform "Read" Operation Using <empty>` }
-        else chunk.returnedData = { type: 'empty', value: 'Empty', line: fragment.line, start: fragment.start, end: fragment.end }
+        else chunk.returnedResult = { type: 'empty', value: 'Empty', line: fragment.line, start: fragment.start, end: fragment.end }
       }
 
       return { error: false }
@@ -239,7 +239,7 @@ export default (ChunkManager, chunk, boxes, environment) => {
           }
         }
       } else {
-        ChunkManager.addChunk(chunk, undefined, { result: chunk.result }, [fragment.value[chunk.executeData.returnedResults.length]])
+        ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, [fragment.value[chunk.executeData.returnedResults.length]])
         
         return { error: false }
       }

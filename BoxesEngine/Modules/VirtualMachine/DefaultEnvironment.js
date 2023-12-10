@@ -107,6 +107,10 @@ export default () => {
       if (typeof number !== 'number') throw `Cannot Perform "Truncate" Operation On <${getTypeName(number)}>`
 
       return Math.trunc(number)
+    },
+
+    'Date.now': () => {
+      return Date.now()
     }
   }
 }
@@ -140,11 +144,10 @@ function getDataValue (data) {
 
 //Get data type name
 function getTypeName (data) {
-  if (['string', 'number', 'boolean'].incluEdes(typeof data)) return typeof data
+  if (['string', 'number', 'boolean'].includes(typeof data)) return typeof data
   if (typeof data === 'undefined') return 'Empty'
   if (data === null) return 'Fire'
   if (Array.isArray(data)) return 'list'
 }
 
-import { pa } from 'translatte/languages.js'
 import copyArray from '../Tools/CopyArray.js'

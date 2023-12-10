@@ -1,4 +1,5 @@
-+count <- 0
-+@loop <- { Input(0) < 10 ? { print(Input(0)) | loop(Input(0)+1) } : { print('Stoped') } }
++start <- Empty
 
-+@main <- print('Running') | loop(0)
++@loop <- { Input(0) < 10 ? { print(Input(0)) | loop(Input(0)+1) } : { ['Time: ', Date.now()-start] | print(Result) | print(List.join(Result, '')) } }
+
++@main <- print('Running') | start = Date.now() | loop(0)
