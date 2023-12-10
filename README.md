@@ -109,7 +109,7 @@ When you're using a `<actionList>`, the actions inside of it will not be execute
 ```
 
 ## Result and Input
-
+`Result` and `Input` are the only "local" 📦 in 📦, Result is the r
 
 ## Lists
 Lists are lovely, you can use `<list>` to do all kind of cool stuff, you can use `<inputList>` to read / set / remove a item from list using an index:
