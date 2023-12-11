@@ -16,7 +16,7 @@ export default class {
   }
  
   // Add chunk
-  addChunk (parentChunk, callLocation, environment, actions, async) {
+  addChunk (parentChunk, callLocation, environment, actions, async, callback) {
     let callPath
 
     if (parentChunk === undefined) callPath = []
@@ -44,7 +44,8 @@ export default class {
       executeData: undefined,
 
       parentChunk: (parentChunk === undefined) ? undefined : parentChunk.id,
-      callPath
+      callPath,
+      callback
     }
 
     if (async) {

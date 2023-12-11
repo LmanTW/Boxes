@@ -1,13 +1,14 @@
 export default convertBoxData
 
 // Convert Boxes data to Javascript data
-function convertBoxData (data) {
+function convertBoxData (VirtualMachine, data) {
   if (data.type === 'string') return data.value
   if (data.type === 'number') return +data.value
   if (data.type === 'boolean') return data.value === 'Yes'
   if (data.type === 'empty') return undefined
   if (data.type === 'fire') return null
-  if (data.type === 'list') return data.value.map((item) => convertBoxData(item))
+  if (data.type === 'list') return data.value.map((item) => convertBoxData(VirtualMachine, item))
+  if (data.type === 'actionList') return async (...input) => await VirtualMachine.runActionList(data.value, input)
   if (data.type === 'externalFunction') return data.value
   if (data.type === 'promise') return { type: 'promise' }
 

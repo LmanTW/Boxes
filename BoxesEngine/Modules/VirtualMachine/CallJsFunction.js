@@ -1,12 +1,12 @@
 // Call javascript function
-export default (chunk, func, input, async) => {
+export default (VirtualMachine, chunk, func, input, async) => {
   if (async) chunk.returnedResult = { type: 'promise', value: '' }
   else {
     chunk.state = 'waiting'
 
     setTimeout(async () => {
       try {
-        let data = await func(...input.map((item) => convertBoxesData(item)))
+        let data = await func(...input.map((item) => convertBoxesData(VirtualMachine, item)))
 
         chunk.returnedResult = { error: false, data: convertJsData(data) }
       } catch(error) {

@@ -67,14 +67,25 @@ export default class {
     } else throw new Error(`Cannot Pause Virtual Machine (State: ${this.#state})`)
   }
 
+  // Run ActionList
+  async runActionList (actionList, input) {
+    if (this.#state === 'running') {
+      return new Promise((resolve) => {
+        this.#ChunkManager.addChunk(undefined, undefined, { input: convertJsData(input) }, actionList, false, (result) => resolve(convertBoxesData(this, result)))
+      })
+    } else throw new Error(`Cannot Run Action List (State: ${this.#state})`)
+  }
+
   // Tick
   #tick () {
     for (let i = 0; i < this.#options.chunkPerExecution; i++) {
       if (this.#TaskManager.tasks.length > 0) {
         let chunk = this.#ChunkManager.chunks[this.#TaskManager.nextTask()]
 
+        if (chunk === undefined) chunk = this.#ChunkManager.chunks[this.#TaskManager.nextTask()]
+
         if (chunk.state === 'running') {
-          let data = executeChunk(this.#ChunkManager, chunk, this.#boxes, this.#environment)
+          let data = executeChunk(this, this.#ChunkManager, chunk, this.#boxes, this.#environment)
           if (data.error) {
             this.#state = 'idle'
 
@@ -90,13 +101,21 @@ export default class {
 
         if (this.#ChunkManager.chunks[this.#executeData.globalChunk] === undefined && this.#executeData.currentOperation < this.#executeData.operations.length-1) {
           let data = getTarget(this.#executeData.operations[this.#executeData.currentOperation].target, this.#boxes, mergeObject(this.#environment, { Result: chunk.result, Input: chunk.input }), this.#executeData.operations[this.#executeData.currentOperation].line)
-          if (data.error) return this.#resolve(data)
+          if (data.error) {
+            this.#state = 'idle'
 
-            setTarget(data.name, data.path, chunk.result, this.#boxes)
+            clearInterval(this.#interval)
 
-            this.#executeData.currentOperation++
+            this.#resolve(data)
 
-            this.#executeData.globalChunk = this.#ChunkManager.addChunk(undefined, { name: '<global>' }, {}, this.#executeData.operations[this.#executeData.currentOperation].source, false)
+            break
+          }
+
+          setTarget(data.name, data.path, chunk.result, this.#boxes)
+
+          this.#executeData.currentOperation++
+
+          this.#executeData.globalChunk = this.#ChunkManager.addChunk(undefined, { name: '<global>' }, {}, this.#executeData.operations[this.#executeData.currentOperation].source, false)
         }
       } else {
         if (!this.#options.keepRunning) {
@@ -113,6 +132,7 @@ export default class {
   }
 }
 
+import convertBoxesData from '../Tools/ConvertBoxesData.js'
 import convertJsData from '../Tools/ConvertJsData.js'
 import mergeObject from '../Tools/MergeObject.js'
 

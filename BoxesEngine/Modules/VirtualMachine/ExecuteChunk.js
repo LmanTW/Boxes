@@ -1,5 +1,5 @@
 // Execute chunk
-export default (ChunkManager, chunk, boxes, environment) => {
+export default (VirtualMachine, ChunkManager, chunk, boxes, environment) => {
   let action = chunk.actions[chunk.currentAction]
   let fragment = action[chunk.currentFragment]
 
@@ -233,7 +233,7 @@ export default (ChunkManager, chunk, boxes, environment) => {
           } else if (chunk.result.type === 'externalFunction') {
             chunk.executeData.state = 'waitingExternalFunction'
 
-            callJsFunction(chunk, chunk.result.value, chunk.executeData.returnedResults, chunk.properties.includes('async'))
+            callJsFunction(VirtualMachine, chunk, chunk.result.value, chunk.executeData.returnedResults, chunk.properties.includes('async'))
 
             return { error: false }
           }
@@ -265,6 +265,8 @@ export default (ChunkManager, chunk, boxes, environment) => {
       }
 
       ChunkManager.removeChunk(chunk.id)
+
+      if (chunk.callback !== undefined) chunk.callback(chunk.result)
     } else {
       chunk.currentAction++
       chunk.properties = []
@@ -275,9 +277,9 @@ export default (ChunkManager, chunk, boxes, environment) => {
   return { error: false }
 }
 
-import { executablePath } from 'puppeteer'
 import splitArray from '../Tools/SplitArray.js'
 
 import callJsFunction from './CallJsFunction.js'
 import isListEqual from './EqualList.js'
 import setTarget from './SetTarget.js'
+

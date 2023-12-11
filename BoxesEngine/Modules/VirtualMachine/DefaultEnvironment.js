@@ -109,6 +109,38 @@ export default () => {
       return Math.trunc(number)
     },
 
+    'Timer.wait': async (time) => {
+      if (typeof time !== 'number') throw `Cannot Perform "Wait" Operation Using <${getTypeName(time)}>`
+
+      return new Promise((resolve) => {
+        setTimeout(() => resolve(), time)
+      })
+    },
+    'Timer.createTimeout': (time, callback) => {
+      if (typeof time !== 'number') throw `Cannot Perform "Create Timeout" Operation Using <${getTypeName(time)}>`
+      if (typeof callback !== 'function') throw `Cannot Perform "Create Timeout" Operation On <${getTypeName(callback)}>`
+
+      let id = generateID(5, Object.keys(timers))
+      timers[id] = setTimeout(() => {
+        if (timers[id] !== undefined) {
+          delete timers[id]
+
+          callback()
+        }
+      }, interval)
+
+      return id
+    },
+    'Timer.createInterval': (interval, callback) => {
+      if (typeof interval !== 'number') throw `Cannot Perform "Create Interval" Operation Using <${getTypeName(interval)}>`
+      if (typeof callback !== 'function') throw `Cannot Perform "Create Interval" Operation On <${getTypeName(callback)}>`
+
+      let id = generateID(5, Object.keys(timers))
+      timers[id] = setInterval(callback, interval)
+
+      return id
+    },
+
     'Date.now': () => {
       return Date.now()
     }
@@ -141,6 +173,7 @@ function getDataValue (data) {
   if (typeof data === 'undefined') return 'Empty'
   if (data === null) return 'Fire'
   if (Array.isArray(data)) return `[${data.map((item) => getDataValue(item)).join(',')}]`
+  if (typeof data === 'function') return '[Action List]'
   if (typeof data === 'object' && data.type === 'promise') return '[Promise]'
 }
 
@@ -150,7 +183,11 @@ function getTypeName (data) {
   if (typeof data === 'undefined') return 'Empty'
   if (data === null) return 'Fire'
   if (Array.isArray(data)) return 'list'
+  if (typeof data === 'function') return 'actionList'
   if (typeof data === 'object' && data.type === 'promise') return 'promise'
 }
 
+import generateID from '../Tools/GenerateID.js'
 import copyArray from '../Tools/CopyArray.js'
+
+let timers = {}
