@@ -17,7 +17,7 @@ Here's an over-engineered example for printing `hello`:
 * [Create 📦](#create-)
 * [Delete 📦](#delete-)
 * [Expressions](#expressions)
-* [Functions](#funcitons)
+* [Functions](#functions)
 * [Result and Input](#result-and-input)
 * [Lists](#lists)
 
@@ -109,7 +109,16 @@ When you're using a `<actionList>`, the actions inside of it will not be execute
 ```
 
 ## Result and Input
-`Result` and `Input` are the only "local" 📦 in 📦, Result is the r
+`Result` and `Input` are the only "local" 📦 in 📦, Result is the result from previous action:
+```
++@doMath <- 1 + 1
++@main <- doMath() | print(Result) # 2
+```
+Input is the input when you call the function, Input will always be a `<list>`:
+```
++@aFunction <- print(Input(0))
++@main <- aFunction(0) # 0
+```
 
 ## Lists
 Lists are lovely, you can use `<list>` to do all kind of cool stuff, you can use `<inputList>` to read / set / remove a item from list using an index:
