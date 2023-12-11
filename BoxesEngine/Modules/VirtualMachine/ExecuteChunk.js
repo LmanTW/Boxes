@@ -25,7 +25,7 @@ export default (VirtualMachine, ChunkManager, chunk, boxes, environment) => {
       let chunks = splitArray(action, (item) => item.type === 'operator' && (item.value === '?' || item.value === ':'))
 
       if (chunks[1].length > 1) return { error: true, content: `Unexpected <${chunks[1][1].type}>`, line: chunks[1][1].line, start: chunks[1][1].start }
-      if (chunks[2].length > 1) return { error: true, content: `Unexpected <${chunks[2][1].type}>`, line: chunks[2][1].line, start: chunks[2][1].start }
+      if (chunks.length > 2 && chunks[2].length > 1) return { error: true, content: `Unexpected <${chunks[2][1].type}>`, line: chunks[2][1].line, start: chunks[2][1].start }
 
       chunk.executeData = { type: 'gettingCondition', condition: chunks[0], chunks: chunks.slice(1, chunks.length).map((item) => item[0]) }
 

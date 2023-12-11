@@ -3,4 +3,8 @@
 #+start <- Empty
 #+@main <- print('Running') | start = Date.now() | ~loop(0)
 
-+interval <- Timer.createInterval(1000, { print('a') | Timer.wait(500) | print('b') })
+#+@loop <- { ~loop() }
+#+@main <- ~loop() | Timer.createInterval(500, { print('hi') })
+
++@loop <- { Input(0) < 100 ? { print(Input(0)) | ~loop(Input(0)+1) }}
++@main <- loop(0)
