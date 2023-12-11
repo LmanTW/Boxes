@@ -105,7 +105,13 @@ When you're using a `<actionList>`, the actions inside of it will not be execute
 ```
 +@aFunction = { Input(0)*Input(1) | Result/2 }
 
-+@main <- aFunction(2, 5) # 5
++@main <- print(aFunction(2, 5)) # 5
+```
+You can run a function in async by adding a `~` before the function name:
+```
++@aFunction = { Input(0)*Input(1) | Result/2 }
+
++@main <- print(~aFunction(2, 5)) # Promise
 ```
 
 ## Result and Input
