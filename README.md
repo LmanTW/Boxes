@@ -12,4 +12,4 @@ Here's an over-engineered example for printing `hello`:
 ```
 
 # Content
-* [Syntax](./Syntax.md)
+* [Syntax](./Document/en-US/Syntax.md)

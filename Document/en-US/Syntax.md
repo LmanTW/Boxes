@@ -30,7 +30,7 @@ You can do as many actions as you can ever possibly wish for, as long as you use
 ## Data Types
 Like most of the programing languages, 📦 have: `<string>`, `<number>`, `<boolean>`, `<empty>`, `<list>`, and some other unique data types, like: `<fire>`, `<actionList>`, `<inputList>`. 📦 don't have `<object>`, because:
 
-**why the hell would you ever need an object when you already have array**?
+**why the hell would you ever need an object when you already have list?**
 
 Just kidding, it's just a joke. [or is it?](https://youtu.be/TN25ghkfgQA?si=4LEfLodD4PVCsSpI&t=2)
 
