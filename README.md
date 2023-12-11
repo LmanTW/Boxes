@@ -113,6 +113,7 @@ You can run a function in async by adding a `~` before the function name:
 
 +@main <- print(~aFunction(2, 5)) # Promise
 ```
+(It'll always return a `<promise>`)
 
 ## Result and Input
 `Result` and `Input` are the only "local" 📦 in 📦, Result is the result from previous action:
