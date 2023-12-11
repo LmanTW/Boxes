@@ -45,7 +45,7 @@
 
 
 ## 創建 📦
-你可以透過在目標名稱的前面添加 `+` 來創建一個 📦:
+你可以透過在目標名稱的前面添加一個 `+` 來創建一個 📦:
 ```
 +aBox <- 1
 ```
@@ -89,14 +89,14 @@ aBox <- aBox = 1 # Set box
 但我不能保證那會像預期的一樣運行，因為我還沒有聰明到可以寫出一個虛擬機 (對，那是在虛擬機裡完成的) 來做到這個功能。
 
 ## 如果否則
-You can do If Else operation in 📦 by using `?` and `:` operator:
+在 📦 中你可以使用 `?` 與 `:` 運算符來做如果否則的運算:
 ```
-+@main <- <condiTion> ? <actionList> # If (If condition is true, execute {actionList})
++@main <- <條件> ? <actionList> # 如果 (如果條件為真，執行 {actionList})
 # or
-+@main <- <condiTion> ? <actionList> : <actionList2> # If Else (If condition is true, execute {actionList} else execute {actionList2})
++@main <- <條件> ? <actionList> : <actionList2> # 如果否則 (如果條件為真, 執行 {actionList} 否則執行 {actionList2})
 ```
 
-## Functions
+## 函數
 We all love functions, so to make 📦 as likeable as possible, we also have functions. you can create a function using `<actionList>`:
 ```
 +@aFunction = { Input(0)*Input(1) | Result/2 } # I'll suggest locking this 📦.
@@ -115,7 +115,7 @@ You can run a function in async by adding a `~` before the function name:
 ```
 (It'll always return a `<promise>`)
 
-## Result and Input
+## Result 與 Input
 `Result` and `Input` are the only "local" 📦 in 📦, `Result` is the result from previous action:
 ```
 +@doMath <- 1 + 1
@@ -127,7 +127,7 @@ You can run a function in async by adding a `~` before the function name:
 +@main <- aFunction(0, 1) # 0, 1
 ```
 
-## Lists
+## 清單
 Lists are lovely, you can use `<list>` to do all kind of cool stuff, you can use `<inputList>` to read / set / remove a item from list using an index:
 ```
 +aList <- [0, 1, 2]
@@ -138,7 +138,7 @@ main <- print(aList(0) = Fire) # Remove item 0
 ```
 (The index starts at 0)
 
-## Loops
+## 迴圈
 Loops are not built in in 📦, but you can still "make" one:
 ```
 +@loop <- { Input(0) < 100 ? { print(Input(0)) | ~loop(Input(0)+1) }}
