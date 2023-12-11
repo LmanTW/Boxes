@@ -39,6 +39,7 @@ export default class {
       currentFragment: 0,
       properties: [],
       result: (environment.result === undefined) ? { type: 'empty', value: 'Empty' } : environment.result,
+      lastResult: (environment.result === undefined) ? { type: 'empty', value: 'Empty' } : environment.result,
       returnedResult: undefined,
       executeData: undefined,
 

@@ -29,7 +29,7 @@ export default (ChunkManager, chunk, boxes, environment) => {
 
       chunk.executeData = { type: 'gettingCondition', condition: chunks[0], chunks: chunks.slice(1, chunks.length).map((item) => item[0]) }
 
-      ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, [chunk.executeData.condition], false)
+      ChunkManager.addChunk(chunk, undefined, { result: chunk.lastResult, input: chunk.input }, [chunk.executeData.condition], false)
 
       return { error: false }
     } else if (chunk.executeData.type === 'gettingCondition') {
@@ -38,14 +38,14 @@ export default (ChunkManager, chunk, boxes, environment) => {
       if (chunk.returnedResult.value === 'Yes') {
         chunk.executeData.type = 'waitingActions'
       
-        ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, chunk.executeData.chunks[0].value, false)
+        ChunkManager.addChunk(chunk, undefined, { result: chunk.lastResult, input: chunk.input }, chunk.executeData.chunks[0].value, false)
 
         return { error: false }
       } else {
         if (chunk.executeData.chunks.length > 1) {
           chunk.executeData.type = 'waitingActions'
 
-          ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, chunk.executeData.chunks[1].value, false)
+          ChunkManager.addChunk(chunk, undefined, { result: chunk.lastResult, input: chunk.input }, chunk.executeData.chunks[1].value, false)
 
           return { error: false }
         }
@@ -71,7 +71,7 @@ export default (ChunkManager, chunk, boxes, environment) => {
 
       chunk.executeData = { type, chunks: splitArray(action, (item) => item.type === 'operator' && item.value === type), returnedResults: [] }
 
-      ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, [chunk.executeData.chunks[0]], false)
+      ChunkManager.addChunk(chunk, undefined, { result: chunk.lastResult, input: chunk.input }, [chunk.executeData.chunks[0]], false)
 
       return { error: false }
     } else {  
@@ -143,7 +143,7 @@ export default (ChunkManager, chunk, boxes, environment) => {
         chunk.currentFragment = action.length
         chunk.executeData = undefined
       } else {
-        ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, [chunk.executeData.chunks[chunk.executeData.returnedResults.length]], false)
+        ChunkManager.addChunk(chunk, undefined, { result: chunk.lastResult, input: chunk.input }, [chunk.executeData.chunks[chunk.executeData.returnedResults.length]], false)
 
         return { error: false }
       }
@@ -152,7 +152,7 @@ export default (ChunkManager, chunk, boxes, environment) => {
     if (chunk.executeData === undefined) {
       chunk.executeData = true
 
-      ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, [action.slice(chunk.currentFragment+1, action.length)], false)
+      ChunkManager.addChunk(chunk, undefined, { result: chunk.lastResult, input: chunk.input }, [action.slice(chunk.currentFragment+1, action.length)], false)
 
       return { error: false }
     } else {
@@ -172,7 +172,7 @@ export default (ChunkManager, chunk, boxes, environment) => {
 
     let data
 
-    if (fragment.value === 'Result') data = { type: chunk.result.type, value: chunk.result.value, line: fragment.line, start: fragment.start, end: fragment.end, name: fragment.value, path: [] }
+    if (fragment.value === 'Result') data = { type: chunk.lastResult.type, value: chunk.lastResult.value, line: fragment.line, start: fragment.start, end: fragment.end, name: fragment.value, path: [] }
     else if (fragment.value === 'Input') data = { type: chunk.input.type, value: chunk.input.value, line: fragment.line, start: fragment.start, end: fragment.end, name: fragment.value, path: [] }
     else data = (boxes[fragment.value] === undefined) ? environment[fragment.value] : boxes[fragment.value].data
 
@@ -183,7 +183,7 @@ export default (ChunkManager, chunk, boxes, environment) => {
 
       chunk.executeData = { state: 'gettingItems', returnedResults: [] }
 
-      if (fragment.value.length > 0) ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, [fragment.value[0]], false)
+      if (fragment.value.length > 0) ChunkManager.addChunk(chunk, undefined, { result: chunk.lastResult, input: chunk.input }, [fragment.value[0]], false)
       else {
         if (chunk.result.type === 'list') return { error: true, content: `Cannot Perform "Read" Operation Using <empty>` }
         else chunk.returnedResult = { type: 'empty', value: 'Empty', line: fragment.line, start: fragment.start, end: fragment.end }
@@ -239,7 +239,7 @@ export default (ChunkManager, chunk, boxes, environment) => {
           }
         }
       } else {
-        ChunkManager.addChunk(chunk, undefined, { result: chunk.result, input: chunk.input }, [fragment.value[chunk.executeData.returnedResults.length]])
+        ChunkManager.addChunk(chunk, undefined, { result: chunk.lastResult, input: chunk.input }, [fragment.value[chunk.executeData.returnedResults.length]])
         
         return { error: false }
       }
@@ -268,6 +268,7 @@ export default (ChunkManager, chunk, boxes, environment) => {
     } else {
       chunk.currentAction++
       chunk.properties = []
+      chunk.lastResult = chunk.result
     }
   } else chunk.currentFragment++
 

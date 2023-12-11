@@ -131,6 +131,7 @@ function getPrintContent (data, layer) {
       else return `${' '.repeat(layer*2)}[\n${items.join(',\n')}\n${' '.repeat(layer*2)}]`
     }
   }
+  if (typeof data === 'object' && data.type === 'promise') return ' '.repeat(layer*2)+'[Promise]'
 }
 
 // Get data value
@@ -140,6 +141,7 @@ function getDataValue (data) {
   if (typeof data === 'undefined') return 'Empty'
   if (data === null) return 'Fire'
   if (Array.isArray(data)) return `[${data.map((item) => getDataValue(item)).join(',')}]`
+  if (typeof data === 'object' && data.type === 'promise') return '[Promise]'
 }
 
 //Get data type name
@@ -148,6 +150,7 @@ function getTypeName (data) {
   if (typeof data === 'undefined') return 'Empty'
   if (data === null) return 'Fire'
   if (Array.isArray(data)) return 'list'
+  if (typeof data === 'object' && data.type === 'promise') return 'promise'
 }
 
 import copyArray from '../Tools/CopyArray.js'

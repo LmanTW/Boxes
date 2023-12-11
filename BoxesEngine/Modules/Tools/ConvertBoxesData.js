@@ -9,6 +9,7 @@ function convertBoxData (data) {
   if (data.type === 'fire') return null
   if (data.type === 'list') return data.value.map((item) => convertBoxData(item))
   if (data.type === 'externalFunction') return data.value
+  if (data.type === 'promise') return { type: 'promise' }
 
   throw new Error(`Unsupported Boxes Data Type <${typeof data}>`)
 }

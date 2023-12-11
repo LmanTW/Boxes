@@ -9,6 +9,7 @@ function convertJsData (data) {
   if (data === null) return { type: 'fire', value: 'Fire' }
   if (Array.isArray(data)) return { type: 'list', value: data.map((item) => convertJsData(item)) }
   if (typeof data === 'function') return { type: 'externalFunction', value: data }
+  if (typeof data === 'object' && data.type === 'promise') return { type: 'promise', value '' }
 
   throw new Error(`Unsupported Javascript Data Type <${typeof data}>`)
 }
