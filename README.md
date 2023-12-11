@@ -17,6 +17,7 @@ Here's an over-engineered example for printing `hello`:
 * [Create 📦](#create-)
 * [Delete 📦](#delete-)
 * [Expressions](#expressions)
+* [If Else](#if-else)
 * [Functions](#functions)
 * [Result and Input](#result-and-input)
 * [Lists](#lists)
@@ -96,6 +97,14 @@ You can also do something like:
 ```
 But I can't guarantee that it will work as expected, because I'm just simply not smart enough to write a VM (Yes, it's done in the VM) that's smart enough to do that.
 
+## If Else
+You can do If Else operation in 📦 by using `?` and `:` operator:
+```
++@main <- <condiTion> ? <actionList> # If (If condition is true, execute {actionList})
+# or
++@main <- <condiTion> ? <actionList> : <actionList2> # If Else (If condition is true, execute {actionList} else execute {actionList2})
+```
+
 ## Functions
 We all love functions, so to make 📦 as likeable as possible, we also have functions. you can create a function using `<actionList>`:
 ```
@@ -123,8 +132,8 @@ You can run a function in async by adding a `~` before the function name:
 ```
 Input is the input when you call the function, Input will always be a `<list>`:
 ```
-+@aFunction <- print(Input(0))
-+@main <- aFunction(0) # 0
++@aFunction <- print(Input(0), Input(1))
++@main <- aFunction(0, 1) # 0, 1
 ```
 
 ## Lists
