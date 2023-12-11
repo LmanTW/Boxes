@@ -7,7 +7,7 @@ A goofy programing language which is all about 📦.
 ## Example
 Here's an over-engineered example for printing `hello`:
 ```
-+aList <- ['h', 'e', 'l', 'l', 'o'] # Create a new box.
++aList <- ['h', 'e', 'l', 'l', 'o'] # Create a box.
 +@main <- List.join(aList, '') | print(Result) # Combine all the letters in the list (anArray).
 ```
 
