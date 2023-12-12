@@ -9,7 +9,7 @@ export default (string, line) => {
       if (state.type !== 'string') {
         if (state.type !== undefined) fragments.push({ type: state.type, line, start: state.start, end: i })
 
-        fragments.push({ type: 'comment', line, start: i, end: line.length-1 })
+        fragments.push({ type: 'comment', line, start: i, end: string.length-1 })
 
         return fragments
       }
