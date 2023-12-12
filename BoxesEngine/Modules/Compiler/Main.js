@@ -30,12 +30,8 @@ export default class {
   }
 
   // Highlight
-  static highlight (code) {
-    let fragments = []
-
-    code.split('\n').forEach((item, index) => fragments = fragments.concat(highlight(item, index)))
-
-    return fragments
+  static highlight (line) {
+    return highlight(line)
   }
 }
 
