@@ -91,7 +91,7 @@ export default (string, line) => {
     }
   }
 
-  if (state.type !== undefined && state.type !== 'string') fragments.push({ type: state.type, value: state.value, line, start: state.start, end: string.length-1 })
+  if (state.type !== undefined && state.type !== 'string') fragments.push({ type: state.type, line, start: state.start, end: string.length-1 })
 
   let fragments2 = []
 
