@@ -33,7 +33,7 @@ export default class {
   static highlight (code) {
     let fragments = []
 
-    code.split('\n').forEach((item) => fragments = fragments.concat(highlight(item)))
+    code.split('\n').forEach((item, index) => fragments = fragments.concat(highlight(item, index)))
 
     return fragments
   }
