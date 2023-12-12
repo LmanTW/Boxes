@@ -28,9 +28,19 @@ export default class {
 
     return { error: false, operations }
   }
+
+  // Highlight
+  static highlight (code) {
+    let fragments = []
+
+    code.split('\n').forEach((item) => fragments = fragments.concat(highlight(item)))
+
+    return fragments
+  }
 }
 
 import splitArray from '../Tools/SplitArray.js'
 
 import parseFragment from './ParseFragment.js'
 import parseList from './ParseList.js'
+import highlight from './Highlight.js'
