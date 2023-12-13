@@ -8,20 +8,20 @@ export default (string, line) => {
   for (let i = 0; i < string.length; i++) {
     if (string[i] === '#') {
       if (state.type !== 'string') {
-        if (state.type !== undefined) fragments.push({ type: state.type, value: state.value, line, start: state.start, end: i })
+        if (state.type !== undefined) fragments.push({ type: state.type, value: state.value, line, start: state.start, end: i-1 })
 
         return { error: false, fragments }
       }
     } else if (string[i] === ' ') {
       if (state.type !== undefined && state.type !== 'string') {
-        fragments.push({ type: state.type, value: state.value, line, start: state.start, end: i })
+        fragments.push({ type: state.type, value: state.value, line, start: state.start, end: i-1 })
 
         state = {}
       }
     } else if ('[{('.includes(string[i])) {
       if (state.type !== 'string') {
         if (state.type !== undefined) {
-          fragments.push({ type: state.type, value: state.value, line, start: state.start, end: i })
+          fragments.push({ type: state.type, value: state.value, line, start: state.start, end: i-1 })
 
           state = {}
         }
@@ -33,7 +33,7 @@ export default (string, line) => {
     } else if (']})'.includes(string[i])) {
       if (state.type !== 'string') {
         if (state.type !== undefined) {
-          fragments.push({ type: state.type, value: state.value, line, start: state.start, end: i })
+          fragments.push({ type: state.type, value: state.value, line, start: state.start, end: i-1 })
 
           state = {}
         }
