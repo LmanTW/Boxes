@@ -67,6 +67,15 @@ export default class {
     } else throw new Error(`Cannot Pause Virtual Machine (State: ${this.#state})`)
   }
 
+  // Stop the virtual machine
+  stop () {
+    if (this.#state === 'running') {
+      this.#state = 'idle'
+
+      clearInterval(this.#interval)
+    } else throw new Error(`Cannot Stop Virtual Machine (State: ${this.#state})`)
+  }
+
   // Run ActionList
   async runActionList (actionList, input) {
     if (this.#state === 'running') {
