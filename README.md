@@ -4,6 +4,9 @@ A goofy programing language which is all about 📦.
 > [!WARNING]
 > Please **don't** use 📦 to make any serious project, this is for the sake of your health (psychologically and physically).
 
+> [!NOTE]
+> Currently making a new version of 📦, with new compiler and vm
+
 ## Example
 Here's an over-engineered example for printing `hello`:
 ```
